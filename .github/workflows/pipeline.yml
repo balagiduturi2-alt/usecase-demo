@@ -68,13 +68,7 @@ jobs:
       with:
         name: artifacts
     
-    - name: Upload to Exchange
-      run: |
-        artifactName=$(ls *.jar | head -1)
-        mvn deploy \
-         -s .maven/settings.xml \
-         -Dmule.artifact=$artifactName \
-       
+
     
  
         
