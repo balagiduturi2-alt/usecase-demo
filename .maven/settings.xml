@@ -2,8 +2,8 @@
   <servers>
     <server>
       <id>ca.anypoint.credentials</id>
-      <clientId>${env.ANYPOINT_CLIENT_ID}</clientId>
-      <clientSecret>${env.ANYPOINT_CLIENT_SECRET}</clientSecret>
+      <clientId>${CLIENT_ID}</clientId>
+      <clientSecret>${CLIENT_SECRET}</clientSecret>
     </server>
   </servers>
 </settings>
