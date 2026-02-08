@@ -31,9 +31,26 @@ jobs:
         java-version: 17
         distribution: 'zulu'
     
-
+    - name: Print effective-settings (optional)
+      run: mvn help:effective-settings
+    
     - name: Build with Maven
-      run: mvn -B package -s .maven/settings.xml        
+      run: mvn -B package -s .maven/settings.xml
+    
+    - name: Stamp artifact file name with commit hash
+      run: |
+        artifactName1=$(ls target/*.jar | head -1)
+        commitHash=$(git rev-parse --short "$GITHUB_SHA")
+        artifactName2=$(ls target/*.jar | head -1 | sed "s/.jar/-$commitHash.jar/g")
+        mv $artifactName1 $artifactName2
+    
+    - name: Upload artifact 
+      uses: actions/upload-artifact@master
+      with:
+          name: artifacts
+          path: target/*.jar
+          
+          
           
   upload:
     needs: build
@@ -56,7 +73,17 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: artifacts
-          
+    
+    - name: Upload to Exchange
+      run: |
+        artifactName=$(ls *.jar | head -1)
+        mvn deploy \
+         -s .maven/settings.xml \
+         -Dmule.artifact=$artifactName \
+       
+    
+ 
+        
   deploy:
     needs: upload
     runs-on: ubuntu-latest
